@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bistro Babushka</title>
+  <style>
+    img {
+      padding-top: 5% ;
+      max-width: 100%;
+    }
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 10px;
+    }
+    article {
+      border: 1px solid orange;
+      border-radius: 5% 5% 0% 0%;
+      
+    }
+  </style>
+</head>
+<body>
+  <main></main>
+
+ <template>
+  <article>
+    <img src="" alt="" class="billede">
+    <h2 class ="navn"></h2>
+    <p class="kategori"></p>
+    <p class="kortbeskrivelse"></p>
+    <p class="pris"></p>
+  </article>
+</template>
+</body>
+<script>
+const bistrofil = "https://babushka-dd8a.restdb.io/rest/menu";
+
+const options = {
+  headers: {"x-apikey":"600ec2fb1346a1524ff12de4"}
+};
+
+async function hentBistroData(){
+  const resultat = await fetch(bistrofil, options);
+  const json = await resultat.json();
+  vis(json);
+
+}
+
+const main = document.querySelector("main");
+const template = document.querySelector("template").content; //templatens indhold
+
+//full loop view
+function vis(json){
+  console.log(json);
+  json.forEach(retter => { //person element som der bliver loopet igennem
+    const clone = template.cloneNode(true); //todo: download billedeerne! 
+    clone.querySelector(".billede").src = "images/medium/" + retter.billede; //ændre billede src til mediesrc (destination url) og tilføj tilhørende billede
+    clone.querySelector(".navn").textContent =  retter.navn; //ændre Nodens textindhold til retter.navn
+    clone.querySelector(".kategori").textContent = retter.kategori;
+    clone.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
+    clone.querySelector(".pris").textContent = retter.pris + " kr";
+    main.appendChild(clone); //tilføj til main 
+    
+  })
+
+
+}
+ hentBistroData();
+ 
+function showSingleView(){
+  console.log("ghfhj");
+}
+
+</script>
+</html>
