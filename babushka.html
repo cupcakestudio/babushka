@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bistro Babushka</title>
   <style>
+    h1 {
+    text-decoration-line: underline ;
+    }
     img {
       padding-top: 5% ;
       max-width: 100%;
@@ -20,10 +23,30 @@
       border-radius: 5% 5% 0% 0%;
       
     }
+    button {
+      text-align: center;
+    }
+    
+    button.valgt  {
+      background-color: orange;
+      border-color: whitesmoke;
+    }
   </style>
 </head>
 <body>
-  <main></main>
+  <h1>Alle retter</h1>
+  <nav> 
+    <!-- dataset for attr værdien (data-<indsæt key attr fra jsonarray) fra data-attributen -->
+      <button data-kategori="alle" class="valgt">Alle retter</button>
+      <button data-kategori="hovedretter">Hovedretter</button>
+      <button data-kategori="forretter">Forretter</button>
+      <button data-kategori="sideorders">Sideorders</button>
+      <button data-kategori="desserter">Desserter</button>
+      <button data-kategori="drikkevarer">Drikkevarer</button>
+    </nav>
+  <main>
+    
+  </main>
 
  <template>
   <article>
@@ -36,43 +59,76 @@
 </template>
 </body>
 <script>
+
+
 const bistrofil = "https://babushka-dd8a.restdb.io/rest/menu";
 
 const options = {
   headers: {"x-apikey":"600ec2fb1346a1524ff12de4"}
 };
 
+
+
+document.addEventListener("DOMContentLoaded", start);
+//globale var
+let filter = "alle";
+let retterValg;
+
+function start(){
+const filterKnapper = document.querySelectorAll("nav button"); //vælg filterknapperne fra DOM
+filterKnapper.forEach(knap => knap.addEventListener("click", filterRetter)); //tilknyt funktionskald på filterknap for kver knap
+hentBistroData();
+ 
+}
+
 async function hentBistroData(){
   const resultat = await fetch(bistrofil, options);
-  const json = await resultat.json();
-  vis(json);
+  retterValg = await resultat.json(); //retterValg er var der indholder vores JSON data
+  vis();
 
 }
+function filterRetter(){
+  filter = this.dataset.kategori; //finder værdi som filter-var sættes lig med
+  document.querySelector("h1").textContent = this.textContent //EventHandler funktionen sørger også for at h1-indhold opdateres, this ref. til klikket knap.
+  //fremhæv aktuelle knap
+  //fjern .valgt fra default/forrige knap
+  document.querySelector(".valgt").classList.remove("valgt");
+  //tilføj .valgt til aktive knap
+  this.classList.add("valgt");
+  vis();
+}
+//full loop view w/ Filtering
+function vis(){
+  const main = document.querySelector("main");
+  const template = document.querySelector("template").content; 
+  main.textContent = ""; //slet indhold fra liste, hver gang liste skal loades på ny
+  console.log(retterValg);
+  retterValg.forEach(retter => {
+  //if statement for alle filterknapper der klikkes på
+  //filterer værdierne der er blevet klikket på sammenlignes med deres tilsvarende kategori og propergeres ned i if statement.
+  if (filter == retter.kategori || filter == "alle") { 
 
-const main = document.querySelector("main");
-const template = document.querySelector("template").content; //templatens indhold
-
-//full loop view
-function vis(json){
-  console.log(json);
-  json.forEach(retter => { //person element som der bliver loopet igennem
-    const clone = template.cloneNode(true); //todo: download billedeerne! 
-    clone.querySelector(".billede").src = "images/medium/" + retter.billede; //ændre billede src til mediesrc (destination url) og tilføj tilhørende billede
+    const clone = template.cloneNode(true); 
     clone.querySelector(".navn").textContent =  retter.navn; //ændre Nodens textindhold til retter.navn
-    clone.querySelector(".kategori").textContent = retter.kategori;
+    clone.querySelector(".kategori").textContent =  retter.kategori;
     clone.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
-    clone.querySelector(".pris").textContent = retter.pris + " kr";
+    clone.querySelector(".pris").textContent = "Pris: " + retter.pris + " kr.";
     main.appendChild(clone); //tilføj til main 
+  } 
+   
+ /*  else 
+  
+   //billeder
+   /*  retter.billede.forEach(billede => {
+     
+     billede.src = `'images/medium/'  +${arrayIndex++} + '-md.jpg'`;
+     clone.querySelector(".billede").appendChild(billede);
+    })  
     
-  })
-
-
+    main.appendChild(clone);
+  } */
+})
 }
- hentBistroData();
- 
-function showSingleView(){
-  console.log("ghfhj");
-}
-
+  hentBistroData();
 </script>
 </html>
