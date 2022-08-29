@@ -102,32 +102,24 @@ function vis(){
   const main = document.querySelector("main");
   const template = document.querySelector("template").content; 
   main.textContent = ""; //slet indhold fra liste, hver gang liste skal loades på ny
-  console.log(retterValg);
+
   retterValg.forEach(retter => {
   //if statement for alle filterknapper der klikkes på
   //filterer værdierne der er blevet klikket på sammenlignes med deres tilsvarende kategori og propergeres ned i if statement.
   if (filter == retter.kategori || filter == "alle") { 
 
-    const clone = template.cloneNode(true); 
+    const clone = template.cloneNode(true);
+    clone.querySelector(".billede").src = "images/medium/" +  retter.billednavn + "-md.jpg"; //billedenavn property ref. til billede og filen der ligger som et array
     clone.querySelector(".navn").textContent =  retter.navn; //ændre Nodens textindhold til retter.navn
     clone.querySelector(".kategori").textContent =  retter.kategori;
     clone.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
     clone.querySelector(".pris").textContent = "Pris: " + retter.pris + " kr.";
+    
     main.appendChild(clone); //tilføj til main 
   } 
-   
- /*  else 
-  
-   //billeder
-   /*  retter.billede.forEach(billede => {
-     
-     billede.src = `'images/medium/'  +${arrayIndex++} + '-md.jpg'`;
-     clone.querySelector(".billede").appendChild(billede);
-    })  
-    
-    main.appendChild(clone);
-  } */
-})
+  })
+ 
+
 }
   hentBistroData();
 </script>
