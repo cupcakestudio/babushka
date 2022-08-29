@@ -178,17 +178,19 @@ function visPopop(retter){
   popop.querySelector(".kategori").style.fontWeight = "bold";
   popop.querySelector(".retPopopImg").src = "images/medium/" +  retter.billednavn + "-md.jpg";
   popop.querySelector(".langbeskrivelse").textContent = retter.langbeskrivelse;
-  popop.querySelector(".kortbeskrivelse").textContent = "";
   popop.querySelector(".langbeskrivelse").style.textAlign = "start";
+  popop.querySelector(".kortbeskrivelse").textContent = "";
   popop.querySelector(".prisPopop").textContent = "Pris: " +retter.pris + "kr."
-  //kort tekst til sideorder filtering og alle filtering i popopview
-  if (filter == "sideorders" || filter == "alle"){
-    
+  //kort tekst til menu items der ikke har langbeskrivelse, anvender negation 
+ 
+
+    if (!retter.langbeskrivelse){
     const shortdescrip = document.createElement("p");
     shortdescrip.classList.add("kortbeskrivelse");
     popop.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
     popop.querySelector(".kortbeskrivelse").appendChild(shortdescrip);
   }
+  
   //lukker popop'en ned
   popop.querySelector("#luk").addEventListener("click", () => popop.style.display = "none");  
 }
