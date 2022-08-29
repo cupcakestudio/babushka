@@ -19,21 +19,65 @@
       grid-gap: 10px;
     }
     article {
-      border: 1px solid orange;
+      border: 1px solid #fb923c;
       border-radius: 5% 5% 0% 0%;
-      
+      cursor: pointer;
     }
     button {
       text-align: center;
+      margin-bottom: 10px;
     }
     
     button.valgt  {
-      background-color: orange;
-      border-color: whitesmoke;
+      background-color: #f97316;
+      border-color: #ffedd5;
     }
+
+    #popop {
+     display: none;
+      position: fixed;
+      top: 10%;
+      left: 10%;
+      width: 80vw;
+      height: 80vh;
+      background-color:#c2410c;
+      border-radius: 3%;
+      overflow: scroll; /* selve sectionen scrollbar*/ 
+    }
+    #popop > #luk {
+      
+      margin: 10px;
+      cursor: pointer;
+      position: fixed;
+    }
+    #popop article{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        align-self: center;
+        margin: 4rem auto;
+        padding: 10px;
+        width: 70vw;
+        background-color: #fff7ed;
+        cursor: default;
+    }
+    
   </style>
 </head>
+
 <body>
+  <!--     pop-op vindue -->
+  <section id="popop">
+      <button id ="luk"> LUK</button>
+      <article>
+        <h3> <span class="titel"></span></h3>
+        <img src="" alt="" class="retPopopImg">
+        <p><span class="kategori"></span></p>
+        <p><span class="langbeskrivelse"></span></p>
+        <p><span class="kortbeskrivelse"></span></p>
+        <p> <span class="prisPopop"></span> </p>
+      </article>
+    </section>
   <h1>Alle retter</h1>
   <nav> 
     <!-- dataset for attr værdien (data-<indsæt key attr fra jsonarray) fra data-attributen -->
@@ -47,7 +91,7 @@
   <main>
     
   </main>
-
+ <!-- skabelon for article divernes indhold -->
  <template>
   <article>
     <img src="" alt="" class="billede">
@@ -57,7 +101,9 @@
     <p class="pris"></p>
   </article>
 </template>
+
 </body>
+
 <script>
 
 
@@ -114,13 +160,40 @@ function vis(){
     clone.querySelector(".kategori").textContent =  retter.kategori;
     clone.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
     clone.querySelector(".pris").textContent = "Pris: " + retter.pris + " kr.";
+    //eventhandler til når der bliver klikket på
+    clone.querySelector("article").addEventListener("click", () => visPopop(retter));  
     
     main.appendChild(clone); //tilføj til main 
   } 
-  })
- 
-
+})
 }
+
+//viser pop-op-vindue med indsatte data elementer
+function visPopop(retter){
+  const popop = document.querySelector("#popop")
+  popop.style.display = "block"; //viser popop vinduet, ændre display fra none til block
+  popop.querySelector(".titel").textContent = "Titel: " + retter.navn;
+  popop.querySelector(".titel").style.textDecoration = "underline";
+  popop.querySelector(".kategori").textContent = retter.kategori;
+  popop.querySelector(".kategori").style.fontWeight = "bold";
+  popop.querySelector(".retPopopImg").src = "images/medium/" +  retter.billednavn + "-md.jpg";
+  popop.querySelector(".langbeskrivelse").textContent = retter.langbeskrivelse;
+  popop.querySelector(".kortbeskrivelse").textContent = "";
+  popop.querySelector(".langbeskrivelse").style.textAlign = "start";
+  popop.querySelector(".prisPopop").textContent = "Pris: " +retter.pris + "kr."
+  //kort tekst til sideorder filtering og alle filtering i popopview
+  if (filter == "sideorders" || filter == "alle"){
+    
+    const shortdescrip = document.createElement("p");
+    shortdescrip.classList.add("kortbeskrivelse");
+    popop.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
+    popop.querySelector(".kortbeskrivelse").appendChild(shortdescrip);
+  }
+  //lukker popop'en ned
+  popop.querySelector("#luk").addEventListener("click", () => popop.style.display = "none");  
+}
+
+
   hentBistroData();
 </script>
 </html>
