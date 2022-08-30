@@ -19,13 +19,24 @@
       padding-top: 5% ;
       max-width: 100%;
     }
+    #logo_container {
+      display: flex;
+      justify-content: center;
+    }
+    #logo_containerPopop {
+      max-width: 25%;
+      display: flex;
+      justify-content: center;
+    }
     main {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       grid-gap: 10px;
     }
    h2 {
+    text-align: center;
      font-style: normal;
+     font-weight: bold;
    }
    nav {
     display: flex;
@@ -34,13 +45,18 @@
     justify-content: space-evenly;
    }
      article {
-      
+      display: flex;
+      flex-direction: column;
       border-radius: 5% 5% 0% 0%;      
       cursor: pointer;
       background-color: #f97316;
     }
+     #popop > h2 {
+      font-size: x-large; 
+      background-color: #ffedd5;
+    }
+    
     button {
-      
       color: #eff6ff;
       text-align: center;
       margin-bottom: 10px;
@@ -63,32 +79,51 @@
       background-color: #ffedd5;
       border-radius: 3%;
       overflow: scroll; /* selve sectionen scrollbar*/ 
+      z-index: 2;
     }
     #popop > #luk {
       top: 7%;
       left: 50%;
       position: relative;   
       cursor: pointer;
-      
+      font-size: large;
     }
+  
     #popop article{
         display: flex;
         flex-direction: column;
         text-align: center;
         align-self: center;
-        margin: 4rem auto;
+        margin: 3rem auto;
         padding: 10px;
         width: 70vw;
         background-color: #ffedd5;
         cursor: default;
     }
-    
+
     .prisPopop,
     .pris {
-      text-decoration: 2px solid underline;
+     text-decoration: 2px solid underline;
+     font-weight: bold;
     }
+    .pris {
+      margin-top: auto;
+    }
+   
     .kategori {
+      align-self: baseline;
       font-style: italic;
+    }
+    #overlay {
+    position: fixed; /* Sit on top of the page content */
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
     }
   </style>
 </head>
@@ -104,9 +139,17 @@
         <p><span class="langbeskrivelse"></span></p>
         <p><span class="kortbeskrivelse"></span></p>
         <p> <span class="prisPopop"></span> </p>
+        <div id="logo_containerPopop">
+          <img src="images/medium/cafe_babushka_logo.svg" alt="cafe babushka logo" id="logo">
+        </div>
       </article>
     </section>
-  <h1>Alle retter</h1>
+    <div id = "overlay"></div>
+    <div id="logo_container">
+      <img src="images/medium/cafe_babushka_logo.svg" alt="cafe babushka logo" id="logo">
+    </div>
+    
+    <h2 id="filtername">Alle retter</h2>
   <nav> 
     <!-- dataset for attr værdien (data-<indsæt key attr fra jsonarray) fra data-attributen -->
       <button data-kategori="alle" class="valgt">Alle retter</button>
@@ -163,7 +206,7 @@ async function hentBistroData(){
 }
 function filterRetter(){
   filter = this.dataset.kategori; //finder værdi som filter-var sættes lig med
-  document.querySelector("h1").textContent = this.textContent //EventHandler funktionen sørger også for at h1-indhold opdateres, this ref. til klikket knap.
+  document.querySelector("#filtername").textContent = this.textContent //EventHandler funktionen sørger også for at h2-indhold opdateres, this ref. til klikket knap.
   //fremhæv aktuelle knap
   //fjern .valgt fra default/forrige knap
   document.querySelector(".valgt").classList.remove("valgt");
@@ -198,7 +241,8 @@ function vis(){
 
 //viser pop-op-vindue med indsatte data elementer
 function visPopop(retter){
-  const popop = document.querySelector("#popop")
+  const popop = document.querySelector("#popop");
+  document.getElementById("overlay").style.display = "block";
   popop.style.display = "block"; //viser popop vinduet, ændre display fra none til block
   popop.querySelector(".titel").textContent = "Titel: " + retter.navn;
   popop.querySelector(".titel").style.textDecoration = "underline";
@@ -208,7 +252,7 @@ function visPopop(retter){
   popop.querySelector(".langbeskrivelse").textContent = retter.langbeskrivelse;
   popop.querySelector(".langbeskrivelse").style.textAlign = "start";
   popop.querySelector(".kortbeskrivelse").textContent = "";
-  popop.querySelector(".prisPopop").textContent = "Pris: " +retter.pris + "kr."
+  popop.querySelector(".prisPopop").textContent = "Pris: " +retter.pris + " kr."
   //kort tekst til menu items der ikke har langbeskrivelse, anvender negation 
 
     if (!retter.langbeskrivelse){
@@ -219,9 +263,15 @@ function visPopop(retter){
   }
   
   //lukker popop'en ned
-  popop.querySelector("#luk").addEventListener("click", () => popop.style.display = "none");  
-}
+  popop.querySelector("#luk").addEventListener("click", closePopop)
+  
+  
+ 
+}function closePopop(){
+  popop.style.display = "none";
+  document.getElementById("overlay").style.display = "none";  
 
+}
 
   hentBistroData();
 </script>
