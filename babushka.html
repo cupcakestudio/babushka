@@ -145,9 +145,9 @@
       </article>
     </section>
     <div id = "overlay"></div>
-    <div id="logo_container">
+    <header id="logo_container">
       <img src="images/medium/cafe_babushka_logo.svg" alt="cafe babushka logo" id="logo">
-    </div>
+    </header>
     
     <h2 id="filtername">Alle retter</h2>
   <nav> 
@@ -232,8 +232,7 @@ function vis(){
     clone.querySelector(".kortbeskrivelse").textContent = retter.kortbeskrivelse;
     clone.querySelector(".pris").textContent = "Pris: " + retter.pris + " kr.";
     //eventhandler til når der bliver klikket på
-    clone.querySelector("article").addEventListener("click", () => visPopop(retter));  
-    
+    clone.querySelector("article").addEventListener("click", () => visPopop(retter));   
     main.appendChild(clone); //tilføj til main 
   } 
 })
@@ -253,8 +252,8 @@ function visPopop(retter){
   popop.querySelector(".langbeskrivelse").style.textAlign = "start";
   popop.querySelector(".kortbeskrivelse").textContent = "";
   popop.querySelector(".prisPopop").textContent = "Pris: " +retter.pris + " kr."
-  //kort tekst til menu items der ikke har langbeskrivelse, anvender negation 
-
+ 
+  //kort tekst til menu items der har retter.langbeskrivelse="", anvender conditional: negation 
     if (!retter.langbeskrivelse){
     const shortdescrip = document.createElement("p");
     shortdescrip.classList.add("kortbeskrivelse");
@@ -264,15 +263,12 @@ function visPopop(retter){
   
   //lukker popop'en ned
   popop.querySelector("#luk").addEventListener("click", closePopop)
-  
-  
- 
-}function closePopop(){
+}
+function closePopop(){
   popop.style.display = "none";
   document.getElementById("overlay").style.display = "none";  
 
 }
-
   hentBistroData();
 </script>
 </html>
